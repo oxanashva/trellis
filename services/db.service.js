@@ -8,6 +8,8 @@ export const dbService = { getCollection }
 var dbConn = null
 
 async function getCollection(collectionName) {
+    console.log("Hi Mongo");
+
     try {
         const db = await _connect()
         const collection = await db.collection(collectionName)
