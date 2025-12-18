@@ -90,13 +90,13 @@ async function add(board) {
 }
 
 async function update(board) {
-    const { name, desc, closed, dateClosed, starred, prefs, idMemberCreator, actions, tasks, labels, groups, members, uploadedImages } = board
+    const { name, desc, closed, dateClosed, isStarred, prefs, idMemberCreator, actions, tasks, labels, groups, members, uploadedImages } = board
     const boardToSave = {
         name,
         desc,
         closed,
         dateClosed,
-        starred,
+        isStarred,
         prefs,
         idMemberCreator,
         actions,
