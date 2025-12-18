@@ -306,7 +306,7 @@ export async function updateBoardLabel(boardId, labelId, label) {
 
 export async function removeBoardLabel(boardId, labelId) {
     try {
-        const criteria = { _id: ObjectId.createFromHexString(boardId) } //, 'labels._id': labelId }
+        const criteria = { _id: ObjectId.createFromHexString(boardId) }
 
         const collection = await dbService.getCollection('boards')
         await collection.updateOne(criteria, { $pull: { labels: { _id: labelId } } })
@@ -322,7 +322,7 @@ export async function removeBoardLabel(boardId, labelId) {
 
 export async function addBoardMember(boardId, member) {
     try {
-        const criteria = { _id: ObjectId.createFromHexString(boardId) }     //, 'members._id': member._id } }
+        const criteria = { _id: ObjectId.createFromHexString(boardId) }
 
         const collection = await dbService.getCollection('boards')
         await collection.updateOne(criteria, { $push: { members: member } })

@@ -77,7 +77,7 @@ export async function addBoardGroup(req, res) {
     try {
         const boardId = req.params.id
         const group = req.body
-        const savedGroup = await boardService.addGroup(boardId, group)
+        const savedGroup = await boardService.addBoardGroup(boardId, group)
         res.send(savedGroup)
     } catch (err) {
         logger.error('Failed to add group', err)
@@ -89,7 +89,7 @@ export async function updateBoardGroup(req, res) {
     try {
         const { id: boardId, groupId } = req.params
         const group = req.body
-        const savedGroup = await boardService.updateGroup(boardId, groupId, group)
+        const savedGroup = await boardService.updateBoardGroup(boardId, groupId, group)
         res.send(savedGroup)
     } catch (err) {
         logger.error('Failed to update group', err)
@@ -100,7 +100,7 @@ export async function updateBoardGroup(req, res) {
 export async function removeBoardGroup(req, res) {
     try {
         const { id: boardId, groupId } = req.params
-        const removedId = await boardService.removeGroup(boardId, groupId)
+        const removedId = await boardService.removeBoardGroup(boardId, groupId)
         res.send(removedId)
     } catch (err) {
         logger.error('Failed to remove group', err)
@@ -114,7 +114,7 @@ export async function addBoardTask(req, res) {
     try {
         const boardId = req.params.id
         const task = req.body
-        const savedTask = await boardService.addTask(boardId, task)
+        const savedTask = await boardService.addBoardTask(boardId, task)
         res.send(savedTask)
     } catch (err) {
         logger.error('Failed to add task', err)
@@ -126,7 +126,7 @@ export async function updateBoardTask(req, res) {
     try {
         const { id: boardId, taskId } = req.params
         const task = req.body
-        const savedTask = await boardService.updateTask(boardId, taskId, task)
+        const savedTask = await boardService.updateBoardTask(boardId, taskId, task)
         res.send(savedTask)
     } catch (err) {
         logger.error('Failed to update task', err)
@@ -137,7 +137,7 @@ export async function updateBoardTask(req, res) {
 export async function removeBoardTask(req, res) {
     try {
         const { id: boardId, taskId } = req.params
-        const removedId = await boardService.removeTask(boardId, taskId)
+        const removedId = await boardService.removeBoardTask(boardId, taskId)
         res.send(removedId)
     } catch (err) {
         logger.error('Failed to remove task', err)

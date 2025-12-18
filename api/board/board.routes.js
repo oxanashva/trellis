@@ -56,7 +56,7 @@ router.delete('/:id/tasks/:taskId', removeBoardTask)
 
 // actions routes
 router.post('/:id/actions', addBoardAction)
-router.put('/:id/actions/', updateBoardAction)
+router.put('/:id/actions/:actionId', updateBoardAction)
 router.delete('/:id/actions/:actionId', removeBoardAction)
 
 // labels routes
