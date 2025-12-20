@@ -125,8 +125,8 @@ export async function addBoardTask(req, res) {
 export async function updateBoardTask(req, res) {
     try {
         const { id: boardId, taskId } = req.params
-        const task = req.body
-        const savedTask = await boardService.updateBoardTask(boardId, taskId, task)
+        const fieldsToUpdate = req.body
+        const savedTask = await boardService.updateBoardTask(boardId, taskId, fieldsToUpdate)
         res.send(savedTask)
     } catch (err) {
         logger.error('Failed to update task', err)

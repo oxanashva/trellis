@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb'
 
 import { logger } from '../../services/logger.service.js'
-import { makeId } from '../../services/util.service.js'
+import { dbMapUpdateFields, makeId } from '../../services/util.service.js'
 import { dbService } from '../../services/db.service.js'
 import { asyncLocalStorage } from '../../services/als.service.js'
 
@@ -45,10 +45,11 @@ async function query(filterBy = { txt: '' }) {
     console.log('✸ → filterBy:', filterBy)
     try {
         const criteria = _buildCriteria(filterBy)
-        const sort = _buildSort(filterBy)
+        // const sort = _buildSort(filterBy)
 
         const collection = await dbService.getCollection('boards')
-        var boardCursor = await collection.find(criteria, { sort })
+        var boardCursor = await collection.find(criteria)
+        // var boardCursor = await collection.find(criteria, { sort })
 
         // if (filterBy.pageIdx !== undefined) {
         //     boardCursor.skip(filterBy.pageIdx * PAGE_SIZE).limit(PAGE_SIZE)
@@ -202,14 +203,16 @@ async function addBoardTask(boardId, task) {
     }
 }
 
-export async function updateBoardTask(boardId, taskId, task) {
+export async function updateBoardTask(boardId, taskId, fieldsToUpdate) {
     try {
-        const criteria = { _id: ObjectId.createFromHexString(boardId) }
-
         const collection = await dbService.getCollection('boards')
-        await collection.updateOne({ 'tasks._id': taskId }, { $set: { 'tasks.$': task } })
+        const $set = dbMapUpdateFields('tasks', fieldsToUpdate)
+        await collection.updateOne(
+            { _id: ObjectId.createFromHexString(boardId), 'tasks._id': taskId },
+            { $set }
+        )
 
-        return task
+        return { _id: taskId, ...fieldsToUpdate }
     } catch (err) {
         logger.error(`cannot update board task ${boardId}`, err)
         throw err

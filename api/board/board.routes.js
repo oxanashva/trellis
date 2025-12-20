@@ -45,29 +45,29 @@ router.delete('/:id', removeBoard)
 // router.delete('/:id', requireAdmin, removeBoard)
 
 // groups routes
-router.post('/:id/groups', addBoardGroup)
-router.put('/:id/groups/:groupId', updateBoardGroup)
-router.delete('/:id/groups/:groupId', removeBoardGroup)
+router.post('/:id/group', addBoardGroup)
+router.put('/:id/group/:groupId', updateBoardGroup)
+router.delete('/:id/group/:groupId', removeBoardGroup)
 
 // tasks routes
-router.post('/:id/tasks', addBoardTask)
-router.put('/:id/tasks/:taskId', updateBoardTask)
-router.delete('/:id/tasks/:taskId', removeBoardTask)
+router.post('/:id/task', addBoardTask)
+router.put('/:id/task/:taskId', updateBoardTask)
+router.delete('/:id/task/:taskId', removeBoardTask)
 
 // actions routes
-router.post('/:id/actions', addBoardAction)
-router.put('/:id/actions/:actionId', updateBoardAction)
-router.delete('/:id/actions/:actionId', removeBoardAction)
+router.post('/:id/action', addBoardAction)
+router.put('/:id/action/:actionId', updateBoardAction)
+router.delete('/:id/action/:actionId', removeBoardAction)
 
 // labels routes
-router.post('/:id/labels', addBoardLabel)
-router.put('/:id/labels/:labelId', updateBoardLabel)
-router.delete('/:id/labels/:labelId', removeBoardLabel)
+router.post('/:id/label', addBoardLabel)
+router.put('/:id/label/:labelId', updateBoardLabel)
+router.delete('/:id/label/:labelId', removeBoardLabel)
 
 // members routes
-router.post('/:id/members', addBoardMember)
-router.put('/:id/members/:memberId', updateBoardMember)
-router.delete('/:id/members/:memberId', removeBoardMember)
+router.post('/:id/member', addBoardMember)
+router.put('/:id/member/:memberId', updateBoardMember)
+router.delete('/:id/member/:memberId', removeBoardMember)
 
 // router.get('/', log, getBoards)
 // router.get('/:id', log, getBoardById)
@@ -77,28 +77,28 @@ router.delete('/:id/members/:memberId', removeBoardMember)
 // // router.delete('/:id', requireAuth, requireAdmin, removeBoard)
 
 // // groups routes
-// router.post('/:id/groups', requireAuth, addBoardGroup)
-// router.put('/:id/groups/:groupId', requireAuth, updateBoardGroup)
-// router.delete('/:id/groups/:groupId', requireAuth, removeBoardGroup)
+// router.post('/:id/group', requireAuth, addBoardGroup)
+// router.put('/:id/group/:groupId', requireAuth, updateBoardGroup)
+// router.delete('/:id/group/:groupId', requireAuth, removeBoardGroup)
 
 // // tasks routes
-// router.post('/:id/tasks', requireAuth, addBoardTask)
-// router.put('/:id/tasks/:taskId', requireAuth, updateBoardTask)
-// router.delete('/:id/tasks/:taskId', requireAuth, removeBoardTask)
+// router.post('/:id/task', requireAuth, addBoardTask)
+// router.put('/:id/task/:taskId', requireAuth, updateBoardTask)
+// router.delete('/:id/task/:taskId', requireAuth, removeBoardTask)
 
 // // actions routes
-// router.post('/:id/actions', requireAuth, addBoardAction)
-// router.put('/:id/actions/:actionId', requireAuth, updateBoardAction)
-// router.delete('/:id/actions/:actionId', requireAuth, removeBoardAction)
+// router.post('/:id/action', requireAuth, addBoardAction)
+// router.put('/:id/action/:actionId', requireAuth, updateBoardAction)
+// router.delete('/:id/action/:actionId', requireAuth, removeBoardAction)
 
 // // labels routes
-// router.post('/:id/labels', requireAuth, addBoardLabel)
-// router.put('/:id/labels/:labelId', requireAuth, updateBoardLabel)
-// router.delete('/:id/labels/:labelId', requireAuth, removeBoardLabel)
+// router.post('/:id/label', requireAuth, addBoardLabel)
+// router.put('/:id/label/:labelId', requireAuth, updateBoardLabel)
+// router.delete('/:id/label/:labelId', requireAuth, removeBoardLabel)
 
 // // members routes
-// router.post('/:id/members', requireAuth, addBoardMember)
-// router.put('/:id/members/:memberId', requireAuth, updateBoardMember)
-// router.delete('/:id/members/:memberId', requireAuth, removeBoardMember)
+// router.post('/:id/member', requireAuth, addBoardMember)
+// router.put('/:id/member/:memberId', requireAuth, updateBoardMember)
+// router.delete('/:id/member/:memberId', requireAuth, removeBoardMember)
 
 export const boardRoutes = router
