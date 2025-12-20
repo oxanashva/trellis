@@ -69,3 +69,18 @@ export function randomPastTime() {
 	const pastTime = getRandomIntInclusive(HOUR, WEEK)
 	return Date.now() - pastTime
 }
+
+/**
+ * Converts a flat object into MongoDB dot notation for array updates.
+ * @param {string} arrayName - The name of the array field (e.g., 'tasks')
+ * @param {Object} fields - The fields to update (e.g., { title: 'New' })
+ * @returns {Object} - { 'tasks.$.title': 'New' }
+ */
+export function dbMapUpdateFields(arrayName, fields) {
+	const updateFields = {}
+	for (const key in fields) {
+		// We use the $ positional operator to target the specific element matched in the query
+		updateFields[`${arrayName}.$.${key}`] = fields[key]
+	}
+	return updateFields
+}
