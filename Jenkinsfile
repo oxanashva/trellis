@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'built-in' }
 
     environment {
         DOCKER_HUB_USER = credentials('DOCKER_HUB_USER')
