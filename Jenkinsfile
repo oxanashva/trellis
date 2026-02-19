@@ -2,6 +2,7 @@ pipeline {
     agent { label 'built-in' }
 
     environment {
+        PATH = "/usr/bin:/usr/local/bin:${env.PATH}"
         DOCKER_HUB_USER = credentials('DOCKER_HUB_USER')
 
         // Compute short SHA safely inside a script block later
