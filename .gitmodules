@@ -1,0 +1,6 @@
+[submodule "trellis-frontend"]
+	path = trellis-frontend
+	url = https://github.com/oxanashva/trellis-frontend.git
+[submodule "trellis-backend"]
+	path = trellis-backend
+	url = https://github.com/oxanashva/trellis-backend.git
