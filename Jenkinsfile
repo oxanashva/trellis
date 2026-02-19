@@ -30,16 +30,18 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                script {
-                    echo "Building Docker image with tag: ${SHORT_SHA}"
+                dir("${env.WORKSPACE}") {
+                    script {
+                        echo "Building Docker image with tag: ${SHORT_SHA}"
 
-                    sh """
-                        docker build \
-                            -t ${IMAGE_NAME}:latest \
-                            -t ${IMAGE_NAME}:${SHORT_SHA} \
-                            --build-arg VITE_API_URL=${VITE_API_URL} \
-                            --build-arg VITE_CLOUD_NAME=${VITE_CLOUD_NAME} .
-                    """
+                        sh """
+                            docker build \
+                                -t ${IMAGE_NAME}:latest \
+                                -t ${IMAGE_NAME}:${SHORT_SHA} \
+                                --build-arg VITE_API_URL=${VITE_API_URL} \
+                                --build-arg VITE_CLOUD_NAME=${VITE_CLOUD_NAME} .
+                        """
+                    }
                 }
             }
         }
