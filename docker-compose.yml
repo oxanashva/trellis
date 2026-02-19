@@ -1,0 +1,14 @@
+services:
+  trellis-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # These now look for variables on your machine/shell
+        VITE_CLOUD_NAME: ${VITE_CLOUD_NAME}
+        VITE_API_URL: ${VITE_API_URL}
+    container_name: trellis-running
+    ports:
+      - "3030:3030"
+    env_file:
+      - ./trellis-backend/.env
