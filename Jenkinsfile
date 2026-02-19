@@ -49,7 +49,7 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-creds') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKER_HUB_CREDS') {
                         docker.image("${IMAGE_NAME}:latest").push()
                         docker.image("${IMAGE_NAME}:${SHORT_SHA}").push()
                     }
