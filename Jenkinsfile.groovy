@@ -84,7 +84,7 @@ pipeline {
                 emailext(
                     subject: "SUCCESS: Render Deployment (${SHORT_SHA})",
                     body: "Deployment succeeded for commit ${SHORT_SHA}.",
-                    to: ${NOTIFY_EMAIL}
+                    to: env.NOTIFY_EMAIL
                 )
             }
         }
@@ -100,7 +100,7 @@ pipeline {
                 emailext(
                     subject: "FAILURE: Render Deployment (${SHORT_SHA})",
                     body: "Deployment FAILED for commit ${SHORT_SHA}. Check Jenkins logs.",
-                    to: ${NOTIFY_EMAIL}
+                    to: env.NOTIFY_EMAIL
                 )
             }
         }
