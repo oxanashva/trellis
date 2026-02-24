@@ -4,27 +4,21 @@ pipeline {
     environment {
         PATH = "/usr/bin:/usr/local/bin:${env.PATH}"
         DOCKER_HUB_USER = credentials('DOCKER_HUB_USER')
-
-        // Compute short SHA safely inside a script block later
         IMAGE_NAME = "${DOCKER_HUB_USER}/trellis"
-
         VITE_API_URL = credentials('VITE_API_URL')
         VITE_CLOUD_NAME = credentials('VITE_CLOUD_NAME')
-
         RENDER_DEPLOY_HOOK = credentials('RENDER_DEPLOY_HOOK')
         SLACK_WEBHOOK = credentials('SLACK_WEBHOOK')
         NOTIFY_EMAIL = credentials('NOTIFY_EMAIL')
+        SHORT_SHA = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
     }
 
     stages {
-
-        stage('Checkout') {
+        stage('Checkout & Setup') {
             steps {
                 checkout scm
-                script {
-                    SHORT_SHA = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
-                    echo "Short SHA: ${SHORT_SHA}"
-                }
+                sh 'git submodule update --init --recursive'
+                echo "Starting build for commit: ${SHORT_SHA}"
             }
         }
 
@@ -32,14 +26,12 @@ pipeline {
             steps {
                 dir("${env.WORKSPACE}") {
                     script {
-                        echo "Building Docker image with tag: ${SHORT_SHA}"
-
                         sh """
                             docker build \
                                 -t ${IMAGE_NAME}:latest \
                                 -t ${IMAGE_NAME}:${SHORT_SHA} \
-                                --build-arg VITE_API_URL=${VITE_API_URL} \
-                                --build-arg VITE_CLOUD_NAME=${VITE_CLOUD_NAME} .
+                                --build-arg VITE_API_URL="${VITE_API_URL}" \
+                                --build-arg VITE_CLOUD_NAME="${VITE_CLOUD_NAME}" .
                         """
                     }
                 }
@@ -49,6 +41,7 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
+                    // Using the official Jenkins Docker Pipeline syntax for pushing
                     docker.withRegistry('https://index.docker.io/v1/', 'DOCKER_HUB_CREDS') {
                         docker.image("${IMAGE_NAME}:latest").push()
                         docker.image("${IMAGE_NAME}:${SHORT_SHA}").push()
@@ -72,7 +65,6 @@ pipeline {
     }
 
     post {
-
         success {
             script {
                 sh """
@@ -83,7 +75,7 @@ pipeline {
 
                 emailext(
                     subject: "SUCCESS: Render Deployment (${SHORT_SHA})",
-                    body: "Deployment succeeded for commit ${SHORT_SHA}.",
+                    body: "Deployment succeeded for commit ${SHORT_SHA}. Image: ${IMAGE_NAME}:${SHORT_SHA}",
                     to: env.NOTIFY_EMAIL
                 )
             }
@@ -99,13 +91,14 @@ pipeline {
 
                 emailext(
                     subject: "FAILURE: Render Deployment (${SHORT_SHA})",
-                    body: "Deployment FAILED for commit ${SHORT_SHA}. Check Jenkins logs.",
+                    body: "Deployment FAILED for commit ${SHORT_SHA}. Check Jenkins logs at ${env.BUILD_URL}",
                     to: env.NOTIFY_EMAIL
                 )
             }
         }
 
         always {
+            // Clean up local images to save Jenkins disk space
             sh "docker rmi ${IMAGE_NAME}:latest || true"
             sh "docker rmi ${IMAGE_NAME}:${SHORT_SHA} || true"
         }
