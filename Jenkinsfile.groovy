@@ -24,28 +24,27 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                dir("${env.WORKSPACE}") {
-                    script {
-                        sh """
-                            docker build \
-                                -t ${IMAGE_NAME}:latest \
-                                -t ${IMAGE_NAME}:${SHORT_SHA} \
-                                --build-arg VITE_API_URL="${VITE_API_URL}" \
-                                --build-arg VITE_CLOUD_NAME="${VITE_CLOUD_NAME}" .
-                        """
-                    }
+                script {
+                    sh """
+                        docker build \
+                            -t ${IMAGE_NAME}:latest \
+                            -t ${IMAGE_NAME}:${SHORT_SHA} \
+                            --build-arg VITE_API_URL="${VITE_API_URL}" \
+                            --build-arg VITE_CLOUD_NAME="${VITE_CLOUD_NAME}" .
+                    """
                 }
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
-                script {
-                    // Using the official Jenkins Docker Pipeline syntax for pushing
-                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKER_HUB_CREDS') {
-                        docker.image("${IMAGE_NAME}:latest").push()
-                        docker.image("${IMAGE_NAME}:${SHORT_SHA}").push()
-                    }
+                withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                        echo "\$DOCKER_PASS" | docker login -u "\$DOCKER_USER" --password-stdin
+                        docker push ${IMAGE_NAME}:latest
+                        docker push ${IMAGE_NAME}:${SHORT_SHA}
+                        docker logout
+                    """
                 }
             }
         }
