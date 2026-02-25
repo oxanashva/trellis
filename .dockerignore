@@ -14,9 +14,6 @@ trellis-backend/public
 
 # Optional: Large media or logs
 **/*.log
-**/*.png
-**/*.jpg
-**/*.pdf
 
 # Editor directories and files
 .vscode/*
