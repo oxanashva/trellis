@@ -22,25 +22,16 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Docker Build & Push') {
             steps {
-                script {
+                withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh """
+                        echo "\$DOCKER_PASS" | docker login -u "\$DOCKER_USER" --password-stdin
                         docker build \
                             -t ${IMAGE_NAME}:latest \
                             -t ${IMAGE_NAME}:${SHORT_SHA} \
                             --build-arg VITE_API_URL="${VITE_API_URL}" \
                             --build-arg VITE_CLOUD_NAME="${VITE_CLOUD_NAME}" .
-                    """
-                }
-            }
-        }
-
-        stage('Push to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh """
-                        echo "\$DOCKER_PASS" | docker login -u "\$DOCKER_USER" --password-stdin
                         docker push ${IMAGE_NAME}:latest
                         docker push ${IMAGE_NAME}:${SHORT_SHA}
                         docker logout
