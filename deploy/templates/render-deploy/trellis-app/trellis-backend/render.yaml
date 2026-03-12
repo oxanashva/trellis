@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: trellis-staging-backend
+    name: trellis-backend
     runtime: image
     image:
       url: ghcr.io/oxanashva/trellis-backend:latest

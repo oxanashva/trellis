@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: trellis-staging-frontend
+    name: trellis-frontend
     runtime: static
     repo: https://github.com/oxanashva/trellis-app.git
     rootDir: ./trellis-frontend
