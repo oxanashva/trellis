@@ -1,39 +1,57 @@
-# --- STAGE 1: Build Stage (Frontend + Backend Structure) ---
+# ============================
+# STAGE 1 — Frontend + Backend Builder (frontend is built to trellis-backend/public/)
+# ============================
 FROM node:22-alpine AS builder
 WORKDIR /app
-# Define a "placeholder" environment variable
+
 ARG VITE_CLOUD_NAME
 ARG VITE_API_URL
 
-# 1. Prepare Backend structure (so Vite has a place to output)
 RUN mkdir -p trellis-backend/public
 
-# 2. Copy Frontend files and install deps
+# Frontend deps
 COPY trellis-frontend/package*.json ./trellis-frontend/
 RUN cd trellis-frontend && npm ci
 
-# 3. Copy Frontend source and Build
-# This will output to ../trellis-backend/public based on your vite.config.js
+# Frontend build
 COPY trellis-frontend/ ./trellis-frontend/
-RUN cd trellis-frontend && VITE_CLOUD_NAME=$VITE_CLOUD_NAME VITE_API_URL=$VITE_API_URL npm run build
+RUN cd trellis-frontend && \
+    VITE_CLOUD_NAME=$VITE_CLOUD_NAME \
+    VITE_API_URL=$VITE_API_URL \
+    npm run build
 
-# 4. Prepare Backend deps
+# Backend deps
 COPY trellis-backend/package*.json ./trellis-backend/
 RUN cd trellis-backend && npm ci --only=production
 
-# 5. Copy Backend source
+# Backend source
 COPY trellis-backend/ ./trellis-backend/
 
-# --- STAGE 2: Final Runtime Image ---
-FROM node:22-alpine
+
+# ============================
+# STAGE 2 — Runtime App Image
+# ============================
+FROM node:22-alpine AS app
 WORKDIR /app/trellis-backend
 
-# Copy only the prepared backend (which now contains the public folder)
 COPY --from=builder /app/trellis-backend ./
 
-# Set environment and user for security (Good for OpenShift/Jenkins)
 ENV NODE_ENV=production
 USER node
 
 EXPOSE 3030
 CMD ["node", "server.js"]
+
+
+# ============================
+# STAGE 3 — Playwright Test Runner
+# ============================
+FROM mcr.microsoft.com/playwright:v1.50.0-noble AS tests
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+CMD ["npx", "playwright", "test"]
